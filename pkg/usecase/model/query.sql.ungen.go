@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 )
 
@@ -49,7 +48,6 @@ SELECT id, order_id, product_id, quantity FROM order_product WHERE order_id in %
 
 func (q *Queries) GetOrderProductByOrderIDs(ctx context.Context, arg []int) ([]OrderProduct, error) {
 	sql := fmt.Sprintf(getOrderProductByOrderIDs, arrayInt(arg))
-	log.Println(sql)
 	rows, err := q.db.QueryContext(ctx, sql)
 	if err != nil {
 		return nil, err

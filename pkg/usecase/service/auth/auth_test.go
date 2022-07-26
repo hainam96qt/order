@@ -17,6 +17,9 @@ func TestNewAuthenticationService(t *testing.T) {
 	service, err := NewAuthenticationService(configTest)
 	assert.NoError(t, err)
 
+	err = service.Query.TruncateData(ctx)
+	assert.NoError(t, err)
+
 	result, err := service.Register(ctx, &entities.RegisterRequest{
 		Email:    "email01",
 		Password: "password01",
@@ -26,4 +29,24 @@ func TestNewAuthenticationService(t *testing.T) {
 	})
 	assert.NoError(t, err)
 	assert.NotNil(t, result)
+
+	result, err = service.Register(ctx, &entities.RegisterRequest{
+		Email:    "email02",
+		Password: "password02",
+		Name:     "name01",
+		Role:     "buyer",
+		Address:  "This is an address",
+	})
+	assert.NoError(t, err)
+	assert.NotNil(t, result)
+
+	result, err = service.Register(ctx, &entities.RegisterRequest{
+		Email:    "email02",
+		Password: "password02",
+		Name:     "name01",
+		Role:     "anonymous",
+		Address:  "This is an address",
+	})
+	assert.Error(t, err)
+	assert.Nil(t, result)
 }

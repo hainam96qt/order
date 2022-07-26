@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 	"database/sql"
-	"log"
+	"errors"
 	"time"
 
 	"order-gokomodo/configs"
@@ -55,10 +55,16 @@ func (a AuthenticationService) Register(ctx context.Context, request *entities.R
 		return nil, err
 	}
 
-	roleID := 2
-	if request.Role == "seller" {
+	roleID := 0
+	switch request.Role {
+	case "seller":
 		roleID = 1
+	case "buyer":
+		roleID = 2
+	default:
+		return nil, errors.New("Undifine role")
 	}
+
 	_, err = a.Query.CreateUser(ctx, sql_model.CreateUserParams{
 		Email:      request.Email,
 		Password:   hashPassword,
@@ -110,7 +116,6 @@ func (a AuthenticationService) Login(ctx context.Context, request *entities.Logi
 	if err != nil {
 		return nil, err
 	}
-	log.Print(tokenString)
 	return &entities.LoginResponse{Token: tokenString}, nil
 }
 
