@@ -1,6 +1,7 @@
 # List API
 ## Auth
 #### Login
+After login success will return token which will use for next process. 
 ```
 curl --request POST \
   --url http://localhost:8081/login \
@@ -44,7 +45,7 @@ curl --request POST \
 ```
 curl --request POST \
   --url http://localhost:8081/v1/createProduct \
-  --header 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hbWUwMSIsInVzZXJfaWQiOjEsInJvbGUiOiJzZWxsZXIiLCJleHAiOjE2NTg4MjgzMzh9.EE5l9LHtusXn2XQSFHccmolZPzWS4p7ccUfDTiS-ioE' \
+  --header 'authorization: Bearer Token' \
   --header 'content-type: application/json' \
   --data '{
 	"name": "name 01",
@@ -57,7 +58,7 @@ curl --request POST \
 ```
 curl --request POST \
   --url http://localhost:8081/v1/getProducts \
-  --header 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hbWUwMSIsInVzZXJfaWQiOjEsInJvbGUiOiJzZWxsZXIiLCJleHAiOjE2NTg4MjgzMzh9.EE5l9LHtusXn2XQSFHccmolZPzWS4p7ccUfDTiS-ioE' \
+  --header 'authorization: Bearer Token' \
   --header 'content-type: application/json' \
   --data '{
 	"seller_id": 1,
@@ -72,7 +73,7 @@ curl --request POST \
 ```
 curl --request POST \
   --url http://localhost:8081/v1/createOrder \
-  --header 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hbWUwMiIsInVzZXJfaWQiOjIsInJvbGUiOiJidXllciIsImV4cCI6MTY1ODgzMjA4M30.KxS4-K8drNnEHfJ7ZEjJSMgsNqnTUkE_Lz-zfM7cjNg' \
+  --header 'authorization: Bearer Token' \
   --header 'content-type: application/json' \
   --data '{
 	"order_items":[{
@@ -96,7 +97,7 @@ curl --request POST \
 ```
 curl --request POST \
   --url http://localhost:8081/v1/getOrders \
-  --header 'authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5hbWUwMiIsInVzZXJfaWQiOjIsInJvbGUiOiJidXllciIsImV4cCI6MTY1ODgzMjA4M30.KxS4-K8drNnEHfJ7ZEjJSMgsNqnTUkE_Lz-zfM7cjNg' \
+  --header 'authorization: Bearer Token' \
   --header 'content-type: application/json' \
   --data '{
 	"page": 1,
