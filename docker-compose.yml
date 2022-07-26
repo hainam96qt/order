@@ -19,3 +19,22 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
+  mysql-db-test:
+    image: mysql:5.7.30
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql_db
+      MYSQL_DATABASE: order-s1
+      MYSQL_USER: order_user
+      MYSQL_PASSWORD: mysql_db
+    volumes:
+    - ~/volumes/mysql_db:/var/lib/mysql_db_test
+    ports:
+    - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
