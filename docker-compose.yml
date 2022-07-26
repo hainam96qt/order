@@ -7,8 +7,8 @@ services:
     restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: mysql_db
-      MYSQL_DATABASE: payment-s1
-      MYSQL_USER: payment_user
+      MYSQL_DATABASE: order-s1
+      MYSQL_USER: order_user
       MYSQL_PASSWORD: mysql_db
     volumes:
       - ~/volumes/mysql_db:/var/lib/mysql_db

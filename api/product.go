@@ -82,14 +82,9 @@ func (a *APIv1) GetProducts(w http.ResponseWriter, r *http.Request) {
 		middleware.WriteError(w, r, err, http.StatusBadRequest)
 		return
 	}
-	userID, err := common.GetUserIDFromContext(ctx)
-	if err != nil {
-		middleware.WriteError(w, r, err, http.StatusBadRequest)
-		return
-	}
 
 	result, err := a.ProductService.ListProduct(ctx, &entities.ListProductRequest{
-		SellerID: userID,
+		SellerID: input.SellerID,
 		PerPage:  input.PerPage,
 		Page:     input.Page,
 	})

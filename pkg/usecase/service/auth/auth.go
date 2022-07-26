@@ -96,13 +96,12 @@ func (a AuthenticationService) Login(ctx context.Context, request *entities.Logi
 	if err != nil {
 		return nil, err
 	}
-	expirationTime := time.Now().Add(expireTime * time.Minute)
+	expirationTime := time.Now().Add(60 * time.Minute)
 	claims := &Claims{
 		Username: user.Name,
 		USerID:   int(user.ID),
 		Role:     role.RoleName.String,
 		StandardClaims: jwt.StandardClaims{
-			// In JWT, the expiry time is expressed as unix milliseconds
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
@@ -115,17 +114,15 @@ func (a AuthenticationService) Login(ctx context.Context, request *entities.Logi
 	return &entities.LoginResponse{Token: tokenString}, nil
 }
 
-func DecodeToken(token string) (int, error) {
+func DecodeToken(token string) (*Claims, error) {
 	var claims Claims
 	_, err := jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(jwtKey), nil
 	})
 	if err != nil {
-		log.Println("Decode token got error")
-		return 0, err
+		return nil, err
 	}
-	log.Println(claims.USerID)
-	return claims.USerID, nil
+	return &claims, nil
 }
 
 func CheckPasswordHash(hashedPassword, password string) error {

@@ -73,10 +73,6 @@ func (o OrderService) CreateOrder(ctx context.Context, request *entities.CreateO
 		return nil, errors.New("Only one seller in one order")
 	}
 
-	if len(productByIDs) != len(request.OrderItems) {
-		return nil, errors.New("Some product not permit to order")
-	}
-
 	userID, err := common.GetUserIDFromContext(ctx)
 	if err != nil {
 		return nil, err
@@ -88,7 +84,7 @@ func (o OrderService) CreateOrder(ctx context.Context, request *entities.CreateO
 		return nil, err
 	}
 
-	seller, err := o.Query.WithTx(tx).GetUserByID(ctx, int32(userID))
+	seller, err := o.Query.WithTx(tx).GetUserByID(ctx, int32(sellerID))
 	if err != nil {
 		return nil, err
 	}
@@ -243,6 +239,13 @@ func (o OrderService) AcceptOrder(ctx context.Context, orderID int) (bool, error
 	}
 	if role != "seller" {
 		return false, errors.New("Only seller can accept order")
+	}
+	order, err := o.Query.GetOrderByID(ctx, int32(orderID))
+	if err != nil {
+		return false, err
+	}
+	if order.SellerID != int32(userID) {
+		return false, errors.New("Do not have permission accept this order")
 	}
 	err = o.Query.UpdateOrderStatus(ctx, sql_model.UpdateOrderStatusParams{
 		SellerID: int32(userID),

@@ -9,7 +9,7 @@ import (
 )
 
 type CreateOrderRequest struct {
-	OrderItems []OrderItem `json:"order_products"`
+	OrderItems []OrderItem `json:"order_items"`
 }
 
 type OrderItem struct {
@@ -158,7 +158,6 @@ type AcceptOrderResponse struct {
 	Success bool `json:"success"`
 }
 
-// AcceptOrder(context.Context, *AcceptOrderRequest) (bool, error)
 func (a *APIv1) AcceptOrder(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var input AcceptOrderRequest

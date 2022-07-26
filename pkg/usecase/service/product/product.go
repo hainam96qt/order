@@ -3,6 +3,8 @@ package product
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"order-gokomodo/common"
 	"order-gokomodo/configs"
 	"order-gokomodo/pkg/db/mysql_db"
 	"order-gokomodo/pkg/entities"
@@ -29,6 +31,13 @@ func NewProductService(cfg *configs.Config) (*ProductService, error) {
 }
 
 func (p ProductService) CreateProduct(ctx context.Context, request *entities.CreateProductRequest) (*entities.CreateProductResponse, error) {
+	role, err := common.GetUserRoleFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if role != "seller" {
+		return nil, errors.New("Only seller can create product")
+	}
 	tx, err := p.DatabaseConn.Begin()
 	if err != nil {
 		return nil, err
@@ -43,10 +52,10 @@ func (p ProductService) CreateProduct(ctx context.Context, request *entities.Cre
 		Price:    int64(request.Price),
 		SellerID: int32(request.SellerID),
 	})
-	newProductID, err := result.LastInsertId()
 	if err != nil {
 		return nil, err
 	}
+	newProductID, err := result.LastInsertId()
 	newProduct, err := p.Query.WithTx(tx).GetProductByID(ctx, int32(newProductID))
 	if err != nil {
 		_ = tx.Rollback()

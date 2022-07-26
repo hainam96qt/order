@@ -1,13 +1,21 @@
 package db
 
-import "context"
+import (
+	"context"
+	"fmt"
+	"log"
+	"strconv"
+)
 
-const getProductsByIDs = `-- name: GetUserByEmail :many
-SELECT id, name, description, price, seller_id FROM products where id in ? 
+const getProductsByIDs = `-- name: GetProductsByIDs :many
+SELECT id, name, description, price, seller_id 
+FROM products 
+WHERE id in %s
 `
 
 func (q *Queries) GetProductsByIDs(ctx context.Context, arg []int) ([]Product, error) {
-	rows, err := q.db.QueryContext(ctx, getProductsByIDs, arg)
+	sql := fmt.Sprintf(getProductsByIDs, arrayInt(arg))
+	rows, err := q.db.QueryContext(ctx, sql)
 	if err != nil {
 		return nil, err
 	}
@@ -36,11 +44,13 @@ func (q *Queries) GetProductsByIDs(ctx context.Context, arg []int) ([]Product, e
 }
 
 const getOrderProductByOrderIDs = `-- name: GetOrderProductByOrderIDs :many
-SELECT id, order_id, product_id, quantity FROM order_product WHERE id in ?
+SELECT id, order_id, product_id, quantity FROM order_product WHERE order_id in %s
 `
 
-func (q *Queries) GetOrderProductByOrderIDs(ctx context.Context, id []int) ([]OrderProduct, error) {
-	rows, err := q.db.QueryContext(ctx, getOrderProductByOrderIDs, id)
+func (q *Queries) GetOrderProductByOrderIDs(ctx context.Context, arg []int) ([]OrderProduct, error) {
+	sql := fmt.Sprintf(getOrderProductByOrderIDs, arrayInt(arg))
+	log.Println(sql)
+	rows, err := q.db.QueryContext(ctx, sql)
 	if err != nil {
 		return nil, err
 	}
@@ -65,4 +75,16 @@ func (q *Queries) GetOrderProductByOrderIDs(ctx context.Context, id []int) ([]Or
 		return nil, err
 	}
 	return items, nil
+}
+
+func arrayInt(arg []int) string {
+	value := "("
+	for k, v := range arg {
+		value += strconv.Itoa(v)
+		if k != len(arg)-1 {
+			value += ","
+		}
+	}
+	value += ")"
+	return value
 }

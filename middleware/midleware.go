@@ -18,10 +18,11 @@ func Authentication(h http.Handler) http.Handler {
 		log.Println(splitToken)
 		decodeValue, err := auth.DecodeToken(reqToken)
 		if err != nil {
-			WriteError(w, r, err, 500)
+			WriteError(w, r, err, http.StatusBadRequest)
 		}
-		ctx := context.WithValue(r.Context(), "user_id", decodeValue)
-		ctx = context.WithValue(ctx, "role", decodeValue)
+		ctx := context.WithValue(r.Context(), "user_id", decodeValue.USerID)
+		ctx = context.WithValue(ctx, "role", decodeValue.Role)
+
 		h.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

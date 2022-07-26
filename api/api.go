@@ -46,16 +46,15 @@ func (a *APIv1) AttachHandlers(router *mux.Router) *mux.Router {
 	router.HandleFunc("/login", a.Login)
 	router.HandleFunc("/register", a.Register)
 
-	productRouter := router.PathPrefix("/product").Subrouter()
-	productRouter.Use(middleware.Authentication)
-	productRouter.HandleFunc("/create", a.CreateProduct)
-	productRouter.HandleFunc("/gets", a.GetProducts)
+	v1Router := router.PathPrefix("/v1").Subrouter()
+	v1Router.Use(middleware.Authentication)
+	v1Router.HandleFunc("/createProduct", a.CreateProduct)
+	v1Router.HandleFunc("/getProducts", a.GetProducts)
 
-	orderRouter := router.PathPrefix("/order").Subrouter()
-	orderRouter.Use(middleware.Authentication)
-	orderRouter.HandleFunc("/create", a.CreateProduct)
-	orderRouter.HandleFunc("/gets", a.ListOrder)
-	orderRouter.HandleFunc("/accept", a.AcceptOrder)
+	v1Router.Use(middleware.Authentication)
+	v1Router.HandleFunc("/createOrder", a.CreateOrder)
+	v1Router.HandleFunc("/getOrders", a.ListOrder)
+	v1Router.HandleFunc("/acceptOrder", a.AcceptOrder)
 
 	return router
 }
