@@ -232,7 +232,7 @@ func (o OrderService) ListOrder(ctx context.Context, request *entities.ListOrder
 	return &result, nil
 }
 
-func (o OrderService) AcceptOrder(ctx context.Context, request *entities.AcceptOrderRequest) (bool, error) {
+func (o OrderService) AcceptOrder(ctx context.Context, orderID int) (bool, error) {
 	userID, err := common.GetUserIDFromContext(ctx)
 	if err != nil {
 		return false, err
@@ -246,7 +246,7 @@ func (o OrderService) AcceptOrder(ctx context.Context, request *entities.AcceptO
 	}
 	err = o.Query.UpdateOrderStatus(ctx, sql_model.UpdateOrderStatusParams{
 		SellerID: int32(userID),
-		ID:       int32(request.OrderID),
+		ID:       int32(orderID),
 	})
 	if err != nil {
 		return false, err

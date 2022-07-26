@@ -1,13 +1,14 @@
 package api
 
 import (
-	"challenge/pkg/mod/github.com/gorilla/mux"
 	"log"
 	"order-gokomodo/configs"
 	"order-gokomodo/middleware"
 	"order-gokomodo/pkg/usecase/service/auth"
 	"order-gokomodo/pkg/usecase/service/order"
 	product "order-gokomodo/pkg/usecase/service/product"
+
+	"github.com/gorilla/mux"
 )
 
 type APIv1 struct {
@@ -53,8 +54,8 @@ func (a *APIv1) AttachHandlers(router *mux.Router) *mux.Router {
 	orderRouter := router.PathPrefix("/order").Subrouter()
 	orderRouter.Use(middleware.Authentication)
 	orderRouter.HandleFunc("/create", a.CreateProduct)
-	orderRouter.HandleFunc("/gets", a.CreateProduct)
-	orderRouter.HandleFunc("/accept", a.CreateProduct)
+	orderRouter.HandleFunc("/gets", a.ListOrder)
+	orderRouter.HandleFunc("/accept", a.AcceptOrder)
 
 	return router
 }

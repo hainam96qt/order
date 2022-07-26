@@ -2,19 +2,16 @@ package entities
 
 import (
 	"context"
-	"order-gokomodo/pkg/enum"
 	"time"
 )
 
 type OrderService interface {
 	ListOrder(context.Context, *ListOrderRequest) (*ListOrderResponse, error)
 	CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error)
-	AcceptOrder(context.Context, *AcceptOrderRequest) (bool, error)
+	AcceptOrder(ctx context.Context, orderID int) (bool, error)
 }
 
 type ListOrderRequest struct {
-	UserID  int
-	Role    enum.Role
 	Page    int
 	PerPage int
 }
